@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "DOTS-Clean.sln"
+    "dotnet.defaultSolution": "Jobs-Demo.sln"
 }
