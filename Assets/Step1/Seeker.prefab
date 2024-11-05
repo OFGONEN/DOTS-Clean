@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8390134852999911375}
   - component: {fileID: 5056013910030655347}
   - component: {fileID: 8633463944441448941}
-  - component: {fileID: 3973750414420192610}
   m_Layer: 0
   m_Name: Seeker
   m_TagString: Untagged
@@ -101,15 +100,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Direction: {x: 0, y: 0, z: 0}
---- !u!114 &3973750414420192610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9111510357152131288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4186dbe6332faa04cb50157402380b2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
