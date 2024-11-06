@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc9bbc390f16b744085f3b9454450248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetCount: 10000
+  TargetCount: 500000
   TargetPrefab: {fileID: 7082256641934663509, guid: c127eaf1c71f0004d871384f65ee743a, type: 3}
-  SpawnRadius: 0
+  SpawnRadius: 50

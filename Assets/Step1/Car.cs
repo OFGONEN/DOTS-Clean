@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Mathematics;
 using Unity.Profiling;
 using UnityEngine;
 
@@ -9,15 +11,21 @@ namespace Jobs_Demo.Step1
         public float Speed;
         public float SeekRadius;
 
-        private List<Renderer> targetRenderers;
+        private NativeArray<int> targetIndices;
+
         private MaterialPropertyBlock materialPropertyBlock;
         ProfilerMarker seekMarker = new ProfilerMarker("Car.Seek");
 
         private void Awake() 
         {
-            targetRenderers = new List<Renderer>(128);
+            targetIndices = new NativeArray<int>(Spawner.TargetTransforms.Length, Allocator.Persistent);
 
             materialPropertyBlock = new MaterialPropertyBlock();
+        }
+
+        private void OnDestroy() 
+        {
+            targetIndices.Dispose();
         }
 
         public void Update()
@@ -43,11 +51,11 @@ namespace Jobs_Demo.Step1
             for (int i = 0; i < Spawner.TargetTransforms.Length; i++)
             {
                 var targetPosition = Spawner.TargetTransforms[i].position;
-                var distance = (targetPosition - currentPosition).sqrMagnitude;
+                var distance = math.distancesq(targetPosition, currentPosition);
 
                 if (distance < seekRadiusSq)
                 {
-                    targetRenderers.Add(Spawner.TargetRenderers[i]);
+                    targetIndices[i] = 1;
                 }
             }
         }
@@ -56,20 +64,28 @@ namespace Jobs_Demo.Step1
         {
             materialPropertyBlock.SetColor("_BaseColor", Color.blue);
 
-            foreach (var renderer in targetRenderers)
-                renderer.SetPropertyBlock(materialPropertyBlock);
-
-            targetRenderers.Clear();
+            for (int i = 0; i < targetIndices.Length; i++)
+            {
+                if(targetIndices[i] == 1)
+                {
+                    targetIndices[i] = 0;
+                    Spawner.TargetRenderers[i].SetPropertyBlock(materialPropertyBlock);
+                }
+            }
         }
 
         void SetTargetRenderers()
         {
             materialPropertyBlock.SetColor("_BaseColor", Color.red);
 
-            foreach (var renderer in targetRenderers)
-                renderer.SetPropertyBlock(materialPropertyBlock);
+            for (int i = 0; i < targetIndices.Length; i++)
+            {
+                if(targetIndices[i] == 1)
+                {
+                    Spawner.TargetRenderers[i].SetPropertyBlock(materialPropertyBlock);
+                }
+            }
         }
-
 
         private void OnDrawGizmosSelected() 
         {

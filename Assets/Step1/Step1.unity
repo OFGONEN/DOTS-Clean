@@ -490,14 +490,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5496252458609012476, guid: da1286dacc77ea14abcf2e9dcb246089, type: 3}
-      propertyPath: SpawnRadius
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5496252458609012476, guid: da1286dacc77ea14abcf2e9dcb246089, type: 3}
-      propertyPath: TargetCount
-      value: 100000
-      objectReference: {fileID: 0}
     - target: {fileID: 7409196288529488375, guid: da1286dacc77ea14abcf2e9dcb246089, type: 3}
       propertyPath: m_Name
       value: Spawner
