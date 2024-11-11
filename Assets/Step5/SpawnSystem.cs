@@ -6,7 +6,7 @@ using Unity.Transforms;
 
 namespace Jobs_Demo.Step5
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
     partial struct SpawnSystem : ISystem
     {
         [BurstCompile]

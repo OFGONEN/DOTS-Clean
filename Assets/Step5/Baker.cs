@@ -13,7 +13,7 @@ namespace Jobs_Demo.Step5
         {
             public override void Bake(PropertiesBaker authoring)
             {
-                var targetEntity = GetEntity(authoring.TargetPrefab, TransformUsageFlags.Renderable);
+                var targetEntity = GetEntity(authoring.TargetPrefab, TransformUsageFlags.None);
 
                 var propertiesEntity = GetEntity(TransformUsageFlags.None);
                 AddComponent<SpawnData>(propertiesEntity, new SpawnData
