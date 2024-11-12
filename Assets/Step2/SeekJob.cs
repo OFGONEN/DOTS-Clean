@@ -1,6 +1,7 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine.Jobs;
 
 namespace Jobs_Demo.Step2
@@ -8,8 +9,10 @@ namespace Jobs_Demo.Step2
     [BurstCompile]
     public struct SeekJob : IJobParallelForTransform
     {
-        [ReadOnly] public float SeekRadiusSq;
-        [ReadOnly] public float3 CurrentPosition;
+        [ReadOnly] public float2 SeekAreaLocalWidth;
+        [ReadOnly] public float2 SeekAreaLocalHeight;
+        [ReadOnly] public float2 SeekAreaLocalLength;
+        [ReadOnly] public float4x4 Transform;
 
         [NativeDisableParallelForRestriction] public NativeArray<int> TargetIndices;
 
@@ -18,9 +21,13 @@ namespace Jobs_Demo.Step2
         public void Execute(int index, TransformAccess transform)
         {
             var targetPosition = transform.position;
-            var distance = math.distancesq(targetPosition, CurrentPosition);
+            var targetPositionInversed = Transform.InverseTransformPoint(targetPosition);
 
-            if (distance < SeekRadiusSq)
+            var isOutside = targetPositionInversed.x < SeekAreaLocalWidth.x || targetPositionInversed.x > SeekAreaLocalWidth.y ||
+                            targetPositionInversed.y < SeekAreaLocalHeight.x || targetPositionInversed.y > SeekAreaLocalHeight.y ||
+                            targetPositionInversed.z < SeekAreaLocalLength.x || targetPositionInversed.z > SeekAreaLocalLength.y;
+
+            if (!isOutside) // Inside Seek Area
             {
                 TargetIndices[index] = 1;
             }

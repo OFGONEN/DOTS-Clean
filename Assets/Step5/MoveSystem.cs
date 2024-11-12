@@ -21,15 +21,16 @@ namespace Jobs_Demo.Step5
         public void OnUpdate(ref SystemState state)
         {
             var seeker = SystemAPI.GetSingletonEntity<SeekerTag>();
-
             var seekerLocalTransform = SystemAPI.GetComponent<LocalTransform>(seeker);  
-            var cameraTransform = CameraReference.Instance.transform;
-
             var moveData = SystemAPI.GetComponent<MoveData>(seeker);
 
-            cameraTransform.position = cameraTransform.position + Vector3.forward * moveData.Speed * Time.deltaTime;
+            var cameraTransform = CameraReference.Instance.transform;
 
-            seekerLocalTransform.Position = seekerLocalTransform.Position + math.forward() * moveData.Speed * Time.deltaTime;
+            var rotation = quaternion.RotateY(math.TORADIANS * moveData.Speed * Time.deltaTime);
+            seekerLocalTransform.Position = math.mul(rotation, seekerLocalTransform.Position);
+            seekerLocalTransform.Rotation = math.mul(rotation, seekerLocalTransform.Rotation);
+
+            cameraTransform.RotateAround(Vector3.zero, Vector3.up, moveData.Speed * Time.deltaTime);
 
             SystemAPI.SetComponent(seeker, seekerLocalTransform);
         }

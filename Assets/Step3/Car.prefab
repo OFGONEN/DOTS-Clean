@@ -99,5 +99,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b0fc2de6e9b4fe458e99955453a2bc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 5
-  SeekRadius: 10
+  Speed: -10
+  SeekAreaSize: {x: 2, y: 2, z: 8}

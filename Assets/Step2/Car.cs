@@ -9,18 +9,26 @@ namespace Jobs_Demo.Step2
     public class Car : MonoBehaviour
     {
         public float Speed;
-        public float SeekRadius;
+        public Vector3 SeekAreaSize;
 
         private NativeArray<int> targetIndices;
 
         private MaterialPropertyBlock materialPropertyBlock;
         ProfilerMarker seekMarker = new ProfilerMarker("Car.Seek");
 
+        private Vector2 localWidth;
+        private Vector2 localHeight;
+        private Vector2 localLength;
+
         private void Awake() 
         {
             targetIndices = new NativeArray<int>(Spawner.TargetTransforms.Length, Allocator.Persistent);
 
             materialPropertyBlock = new MaterialPropertyBlock();
+
+            localWidth = new Vector2(-SeekAreaSize.x / 2, SeekAreaSize.x / 2);
+            localHeight = new Vector2(-SeekAreaSize.y / 2, SeekAreaSize.y / 2);
+            localLength = new Vector2(-SeekAreaSize.z / 2, SeekAreaSize.z / 2);
         }
 
         private void OnDestroy() 
@@ -30,7 +38,7 @@ namespace Jobs_Demo.Step2
 
         public void Update()
         {
-            MoveForward();
+            Move();
             ClearTargetRenderers();
             seekMarker.Begin();
             Seek();
@@ -38,9 +46,9 @@ namespace Jobs_Demo.Step2
             SetTargetRenderers();
         }
 
-        void MoveForward()
+        void Move()
         {
-            transform.position += transform.forward * Speed * Time.deltaTime;
+            transform.parent.Rotate(Vector3.up * Speed * Time.deltaTime);
         }
 
         void Seek()
@@ -48,8 +56,10 @@ namespace Jobs_Demo.Step2
 
             var seekJob = new SeekJob
             {
-                SeekRadiusSq = SeekRadius * SeekRadius,
-                CurrentPosition = transform.position,
+                SeekAreaLocalWidth = localWidth,
+                SeekAreaLocalHeight = localHeight,
+                SeekAreaLocalLength = localLength,
+                Transform = transform.localToWorldMatrix,
                 TargetIndices = targetIndices
             };
 
@@ -89,7 +99,26 @@ namespace Jobs_Demo.Step2
         private void OnDrawGizmosSelected() 
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, SeekRadius);
+
+            //Front
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / -2f, SeekAreaSize.z / 2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / -2f, SeekAreaSize.z / 2f)));
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / 2f, SeekAreaSize.z / 2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / 2f, SeekAreaSize.z / 2f)));
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / -2f, SeekAreaSize.z / 2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / 2f, SeekAreaSize.z / 2f)));
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / -2f, SeekAreaSize.z / 2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / 2f, SeekAreaSize.z / 2f)));
+
+            //Back
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / -2f, SeekAreaSize.z / -2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / -2f, SeekAreaSize.z / -2f)));
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / 2f, SeekAreaSize.z / -2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / 2f, SeekAreaSize.z / -2f)));
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / -2f, SeekAreaSize.z / -2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / 2f, SeekAreaSize.z / -2f)));
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / -2f, SeekAreaSize.z / -2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / 2f, SeekAreaSize.z / -2f)));
+
+            //Left
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / -2f, SeekAreaSize.z / -2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / -2f, SeekAreaSize.z / 2f)));
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / 2f, SeekAreaSize.z / -2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / -2f, SeekAreaSize.y / 2f, SeekAreaSize.z / 2f)));
+
+            //Right
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / -2f, SeekAreaSize.z / -2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / -2f, SeekAreaSize.z / 2f)));
+            Gizmos.DrawLine(transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / 2f, SeekAreaSize.z / -2f)), transform.TransformPoint(new Vector3(SeekAreaSize.x / 2f, SeekAreaSize.y / 2f, SeekAreaSize.z / 2f)));
         }
     }
 }

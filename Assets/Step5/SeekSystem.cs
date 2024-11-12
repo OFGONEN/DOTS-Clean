@@ -19,7 +19,7 @@ namespace Jobs_Demo.Step5
         public void OnUpdate(ref SystemState state)
         {
             var seekerEntity = SystemAPI.GetSingletonEntity<SeekerTag>();
-            var seekerLocalTransform = SystemAPI.GetComponent<LocalTransform>(seekerEntity);
+            var seekerLocalToWorld = SystemAPI.GetComponent<LocalToWorld>(seekerEntity);
             var seekData = SystemAPI.GetComponent<SeekData>(seekerEntity);
 
             var ecbParaller = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
@@ -29,8 +29,10 @@ namespace Jobs_Demo.Step5
 
             var seekJob = new SeekJob
             {
-                SeekerPosition = seekerLocalTransform.Position,
-                SeekRadius = seekData.SeekRadius,
+                SeekAreaLocalWidth = seekData.LocalWidth,
+                SeekAreaLocalHeight = seekData.LocalHeight,
+                SeekAreaLocalLength = seekData.LocalLength,
+                Transform = seekerLocalToWorld.Value,
                 ECB_Parallel = ecbParaller
             };
 
