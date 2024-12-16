@@ -9,7 +9,7 @@ namespace Jobs_Demo.Step3
         public static Transform[] TargetTransforms;
         public static Renderer[] TargetRenderers;
 
-        public static NativeArray<float3> TargetPositions;
+        public static NativeArray<Vector3> TargetPositions;
 
         public int TargetCount;
         public GameObject TargetPrefab;
@@ -22,7 +22,7 @@ namespace Jobs_Demo.Step3
 
             TargetTransforms = new Transform[TargetCount];
             TargetRenderers = new Renderer[TargetCount];
-            TargetPositions = new NativeArray<float3>(TargetCount, Allocator.Persistent);
+            TargetPositions = new NativeArray<Vector3>(TargetCount, Allocator.Persistent);
 
             for (int i = 0; i < TargetCount; i++)
             {

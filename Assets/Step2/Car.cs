@@ -14,7 +14,7 @@ namespace Jobs_Demo.Step2
         private NativeArray<int> targetIndices;
 
         private MaterialPropertyBlock materialPropertyBlock;
-        ProfilerMarker seekMarker = new ProfilerMarker("Car.Seek");
+        ProfilerMarker seekMarker = new ProfilerMarker("Car.Seek2");
 
         private Vector2 localWidth;
         private Vector2 localHeight;
